@@ -2,36 +2,40 @@ const productModel = require("../models/Product");
 
 class HomeProducts {
   async catProducts(req, res) {
-    const { name, page } = req.params;
+    const { name, page, keyword } = req.params;
     const perPage = 12;
     const skip = (page - 1) * perPage;
+    const options = name
+      ? { category: name }
+      : keyword && { title: { $regex: `${keyword}`, $options: "i" } };
     if (page) {
       try {
         const count = await productModel
-          .find({ category: name })
+          .find({
+            ...options,
+          })
           .where("stock")
           .gt(0)
           .countDocuments();
-        const allProducts = await productModel
-          .find({ category: name })
+        const response = await productModel
+          .find({ ...options })
           .where("stock")
           .gt(0)
           .skip(skip)
           .limit(perPage)
           .sort({ updatedAt: -1 });
-        return res.json({ products: allProducts, perPage, count });
+        return res.status(200).json({ products: response, perPage, count });
       } catch (error) {
-        console.log(error);
-        return res.status(400).json({ erros: [{ msg: error.message }] });
+        console.log(error.message);
       }
     } else {
       const response = await productModel
-        .find({ category: name })
+        .find({ ...options })
         .where("stock")
         .gt(0)
         .limit(4)
         .sort({ updatedAt: -1 });
-      return res.json({ products: response });
+      return res.status(200).json({ products: response });
     }
   }
 }
