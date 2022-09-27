@@ -6,12 +6,22 @@ const connect = require("./config/dbConfig");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
+const paymentRoutes = require("./routes/payment");
 
 //Database Connection
 connect();
+app.use(cors());
+
+app.post(
+  "/api/webhook",
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf.toString();
+    },
+  })
+);
 
 app.use(express.json());
-app.use(cors());
 
 //User Routes
 app.use("/api", userRoutes);
@@ -21,6 +31,9 @@ app.use("/api", categoryRoutes);
 
 //Product Routes
 app.use("/api", productRoutes);
+
+//Stripe Payment Routes
+app.use("/api", paymentRoutes);
 
 const port = env.PORT || 5000;
 
