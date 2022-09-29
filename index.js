@@ -12,6 +12,7 @@ const paymentRoutes = require("./routes/payment");
 connect();
 app.use(cors());
 
+//Stripe Webhook
 app.post(
   "/api/webhook",
   express.json({
@@ -22,7 +23,6 @@ app.post(
 );
 
 app.use(express.json());
-
 //User Routes
 app.use("/api", userRoutes);
 
