@@ -6,7 +6,7 @@ const connect = require("./config/dbConfig");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
-const paymentRoutes = require("./routes/payment");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 //Database Connection
 connect();

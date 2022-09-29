@@ -135,6 +135,20 @@ class paymentController {
 
     response.send();
   }
+
+  async paymentVerification(req, res) {
+    const { id } = req.params;
+    try {
+      const session = await stripe.checkout.sessions.retrieve(id);
+      return res.json({
+        msg: `your payment has verified successfully`,
+        status: session.payment_status,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(error.message);
+    }
+  }
 }
 
 module.exports = new paymentController();
